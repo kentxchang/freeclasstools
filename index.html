@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿剛老師的教學魔法整合箱 - 課堂互動與班級經營全方位平台</title>
+    <meta name="description" content="阿剛老師精心開發的教學與課堂管理整合大禮包：涵蓋課堂即時互動與測驗、課堂學習任務、思維心智圖以及班級經營親師系統！">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Varela+Round&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Anime.js for smooth animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Varela Round', 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* 自定義漸層文字 */
+        .text-gradient {
+            background: linear-gradient(135deg, #2563eb, #db2777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 卡片懸浮效果 */
+        .tool-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* 類別分區外框 */
+        .category-section {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 背景裝飾 */
+        .blob {
+            position: absolute;
+            filter: blur(45px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: float 12s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        /* Modal Custom Styles */
+        .code-block {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover { background-color: #2563eb; }
+        .step-number {
+            background-color: #3b82f6;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        /* Tool feature list styles */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .feature-list li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: start;
+        }
+        .feature-list li i {
+            margin-right: 0.5rem;
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        /* Category Badge */
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative">
+
+    <!-- 背景裝飾動畫 -->
+    <div class="blob bg-pink-300 w-72 h-72 rounded-full top-0 left-0 mix-blend-multiply"></div>
+    <div class="blob bg-purple-300 w-80 h-80 rounded-full top-10 right-0 mix-blend-multiply animation-delay-2000"></div>
+    <div class="blob bg-blue-300 w-96 h-96 rounded-full top-[600px] left-20 mix-blend-multiply animation-delay-4000"></div>
+    <div class="blob bg-emerald-200 w-80 h-80 rounded-full bottom-40 right-20 mix-blend-multiply"></div>
+
+    <!-- Header Section -->
+    <header class="w-full pt-14 pb-8 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-block mb-4 px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-700 font-bold text-sm tracking-wide shadow-sm border border-indigo-200">
+                ✨ 2026 全功能整合旗艦版 ✨
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black text-slate-800 mb-6 leading-tight">
+                阿剛老師的<br>
+                <span class="text-gradient">教學魔法整合箱</span><p>課堂互動與班級經營
+            </h1>
+            <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-4">
+ 
+            </p>
+            <p class="text-base md:text-lg font-bold text-indigo-700 bg-indigo-50/80 border border-indigo-200/80 rounded-2xl py-2 px-4 max-w-3xl mx-auto leading-relaxed mb-8 shadow-xs">
+                ✨ 跳脫商業平台的付費限制與繁瑣設定，直擊課堂教學與班級經營的真實核心需求 ✨
+            </p>
+
+            <!-- 快速導覽與設定按鈕 -->
+            <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
+                <button id="open-setup-modal-btn" class="inline-flex items-center px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-full transition-all shadow-lg shadow-violet-300 transform hover:scale-[1.03]">
+                    <i class="fa-solid fa-graduation-cap mr-2"></i>
+                    Firebase 設定教學
+                </button>
+
+                <a href="#category-interactive" class="inline-flex items-center px-5 py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-full transition-all shadow-md shadow-rose-200 hover:scale-[1.03]">
+                    <i class="fa-solid fa-bolt mr-2"></i> 課堂即時互動與測驗
+                </a>
+
+                <a href="#category-tasks" class="inline-flex items-center px-5 py-3 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-full transition-all shadow-md shadow-cyan-200 hover:scale-[1.03]">
+                    <i class="fa-solid fa-tasks mr-2"></i> 課堂任務通
+                </a>
+
+                <a href="#category-mindmap" class="inline-flex items-center px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-full transition-all shadow-md shadow-emerald-200 hover:scale-[1.03]">
+                    <i class="fa-solid fa-diagram-project mr-2"></i> 思維心智圖
+                </a>
+
+                <a href="#category-management" class="inline-flex items-center px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-full transition-all shadow-md shadow-indigo-200 hover:scale-[1.03]">
+                    <i class="fa-solid fa-users-gear mr-2"></i> 班級經營與親師
+                </a>
+            </div>
+
+            <!-- Hero Image: 點擊可放大 -->
+            <div class="mt-8 mb-4 transform hover:scale-[1.01] transition-transform duration-500">
+                <img id="hero-image" src="hero-image-new.jpg" alt="剛好系列介紹圖" role="button" tabindex="0" aria-haspopup="dialog" class="w-[850px] max-w-full mx-auto rounded-3xl shadow-2xl border-4 border-white/60 backdrop-blur-sm cursor-zoom-in">
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content: Categorized Tools -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-8 space-y-12 mb-16">
+
+        <!-- ================= 類別 1: 課堂即時互動與測驗系列 ================= -->
+        <section id="category-interactive" class="category-section p-6 md:p-10">
+            <div class="flex items-center justify-between flex-wrap gap-4 mb-8 border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="cat-badge bg-rose-100 text-rose-700">
+                        <i class="fa-solid fa-chalkboard-user"></i> 第一類別
+                    </span>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-800">課堂即時互動與測驗系列</h2>
+                </div>
+                <span class="text-sm font-semibold text-rose-600 bg-rose-50 px-3 py-1 rounded-full border border-rose-200">
+                    <i class="fa-solid fa-fire mr-1"></i> Firebase 即時多端同步 ＆ AI 出題
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 1. 剛好學 (完整整合白板與簡報) -->
+                <div class="tool-card bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-md flex flex-col h-full relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-36 h-36 bg-pink-50 rounded-bl-full -mr-8 -mt-8 z-0 transition group-hover:scale-110"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-pink-100 text-pink-500 flex items-center justify-center text-3xl shadow-sm">
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                            </div>
+                            <span class="text-xs bg-pink-100 text-pink-800 px-3 py-1 rounded-full font-bold">三合一旗艦核心</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">1. 剛好學 (ClassTools)</h3>
+                        <div class="h-1 w-12 bg-pink-500 rounded-full mb-4"></div>
+                        <p class="text-slate-600 font-bold mb-4">
+                            全能型課堂活動中心：完美內嵌整合<strong>「剛好白板」</strong>與<strong>「剛好簡報」</strong>，免切換分頁一站搞定！
+                        </p>
+                        
+                        <div class="space-y-3 flex-grow mb-6">
+                            <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                                <p class="font-bold text-slate-800 text-sm mb-1 flex items-center">
+                                    <i class="fa-solid fa-list-check text-pink-500 mr-2"></i> 12種多元互動活動
+                                </p>
+                                <p class="text-xs text-slate-500 leading-relaxed">
+                                    是非、選擇、繪圖、錄音、文字雲、便利貼牆、AI 智慧試題生成、全班搶答、專注力檢測與同儕互評。
+                                </p>
+                            </div>
+
+                            <div class="p-3.5 bg-amber-50/70 rounded-2xl border border-amber-100">
+                                <p class="font-bold text-amber-900 text-sm mb-1 flex items-center">
+                                    <i class="fa-solid fa-pen-to-square text-amber-500 mr-2"></i> 剛好白板（內建無縫啟用）
+                                </p>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    師生即時多人共用畫布，支援多頁畫布管理、便利貼協作、圖片與 PDF 講義背景插入，分組共創最佳利器。
+                                </p>
+                            </div>
+
+                            <div class="p-3.5 bg-violet-50/70 rounded-2xl border border-violet-100">
+                                <p class="font-bold text-violet-900 text-sm mb-1 flex items-center">
+                                    <i class="fa-solid fa-presentation-screen text-violet-500 mr-2"></i> 剛好簡報（內建同步跟隨）
+                                </p>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    老師切換投影片，學生裝置零時差即時同步跟隨；支援隨時穿插問答互動、學生作答預覽與即時反饋。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <a href="01classtools.html" target="_blank" class="block w-full py-3.5 px-4 bg-pink-500 hover:bg-pink-600 text-white font-bold rounded-xl text-center transition shadow-md hover:shadow-lg transform active:scale-95 text-base">
+                                進入剛好學 (含白板與簡報) <i class="fa-solid fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 剛好測 -->
+                <div class="tool-card bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-md flex flex-col h-full relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-36 h-36 bg-blue-50 rounded-bl-full -mr-8 -mt-8 z-0 transition group-hover:scale-110"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-3xl shadow-sm">
+                                <i class="fa-solid fa-circle-question"></i>
+                            </div>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full font-bold">AI 評量系統</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">2. 剛好測 (ClassQuiz)</h3>
+                        <div class="h-1 w-12 bg-blue-500 rounded-full mb-4"></div>
+                        <p class="text-slate-600 font-bold mb-4">
+                            AI 賦能的專業課堂測驗系統，出題、即時批改與成績分析一次搞定。
+                        </p>
+
+                        <div class="space-y-3 flex-grow mb-6">
+                            <div class="p-3.5 bg-blue-50/60 rounded-2xl border border-blue-100">
+                                <p class="font-bold text-blue-900 text-sm mb-1 flex items-center">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-blue-500 mr-2"></i> AI 智慧教材出題
+                                </p>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    直接上傳教材 PDF、文字或圖片，AI 自動生成是非、選擇等多種題型，備課省時又精準。
+                                </p>
+                            </div>
+
+                            <div class="p-3.5 bg-indigo-50/60 rounded-2xl border border-indigo-100">
+                                <p class="font-bold text-indigo-900 text-sm mb-1 flex items-center">
+                                    <i class="fa-solid fa-highlighter text-indigo-500 mr-2"></i> PIRLS 層次閱讀與線上畫記
+                                </p>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    專為高層次閱讀理解設計，支援長文閱讀、學生端即時螢光筆畫記作答與思維歷程檢視。
+                                </p>
+                            </div>
+
+                            <div class="p-3.5 bg-sky-50/60 rounded-2xl border border-sky-100">
+                                <p class="font-bold text-sky-900 text-sm mb-1 flex items-center">
+                                    <i class="fa-solid fa-chart-pie text-sky-500 mr-2"></i> 診斷儀表板與報表匯出
+                                </p>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    即時統計全班答題正確率、試題鑑別度分析與弱點診斷，支援一鍵匯出 CSV 詳細成績報表。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <a href="04classquiz.html" target="_blank" class="block w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-center transition shadow-md hover:shadow-lg transform active:scale-95 text-base">
+                                進入剛好測 <i class="fa-solid fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 類別 2: 課堂學習任務管理 ================= -->
+        <section id="category-tasks" class="category-section p-6 md:p-10">
+            <div class="flex items-center justify-between flex-wrap gap-4 mb-8 border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="cat-badge bg-cyan-100 text-cyan-700">
+                        <i class="fa-solid fa-list-check"></i> 第二類別
+                    </span>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-800">課堂任務管理與作品展示</h2>
+                </div>
+                <span class="text-sm font-semibold text-cyan-600 bg-cyan-50 px-3 py-1 rounded-full border border-cyan-200">
+                    <i class="fa-solid fa-table-cells mr-1"></i> Google 試算表 (GAS) 綁定
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 剛好系列-課堂任務通 -->
+                <div class="tool-card bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col h-full relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-50 rounded-bl-full -mr-8 -mt-8 z-0 transition group-hover:scale-110"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-3xl shadow-sm">
+                                <i class="fa-solid fa-tasks"></i>
+                            </div>
+                            <span class="text-xs bg-cyan-100 text-cyan-800 px-2.5 py-1 rounded-full font-bold">GAS 試算表架構</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">剛好系列 - 課堂任務通</h3>
+                        <div class="h-1 w-12 bg-cyan-500 rounded-full mb-4"></div>
+                        <p class="text-slate-600 font-bold mb-3">
+                            模組化課堂任務派發、作答繳交、同儕互評與作品藝廊展示系統。
+                        </p>
+                        <ul class="feature-list flex-grow">
+                            <li><i class="fa-solid fa-check text-cyan-600"></i> <strong>多元任務類型：</strong>支援問答題、繪圖手寫與 PDF 閱讀筆記。</li>
+                            <li><i class="fa-solid fa-check text-cyan-600"></i> <strong>作品藝廊與互評：</strong>即時作品展示牆、同儕點讚給星與心得留言。</li>
+                            <li><i class="fa-solid fa-check text-cyan-600"></i> <strong>進度檢核：</strong>批改退回機制、代碼快速加入，免註冊即刻上手。</li>
+                        </ul>
+                        <div class="pt-2">
+                            <a href="https://kentxchang.blogspot.com/2026/07/google.html" target="_blank" class="block w-full py-3.5 px-4 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl text-center transition shadow-md hover:shadow-lg transform active:scale-95">
+                                <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> 前往課堂任務通 (詳細說明與連結)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 任務通特色導覽 -->
+                <div class="bg-gradient-to-br from-cyan-50 to-sky-50 rounded-3xl p-6 border border-cyan-100 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-xl font-bold text-cyan-900 mb-3 flex items-center">
+                            <i class="fa-solid fa-shapes text-cyan-600 mr-2"></i> 任務通課堂實戰亮點
+                        </h4>
+                        <div class="space-y-3 text-slate-700 text-sm leading-relaxed">
+                            <div class="bg-white/80 p-3.5 rounded-xl border border-cyan-100 shadow-xs">
+                                <p class="font-bold text-cyan-800">📌 多元學習歷程即時蒐集</p>
+                                <p class="text-slate-600 mt-1">學生能直接在平板上繪圖、錄製口語發音或上傳重點筆記，適配各種學科探究活動。</p>
+                            </div>
+                            <div class="bg-white/80 p-3.5 rounded-xl border border-cyan-100 shadow-xs">
+                                <p class="font-bold text-cyan-800">📌 即時作品藝廊（展示牆）</p>
+                                <p class="text-slate-600 mt-1">一鍵開啟展示牆，全班即時欣賞優秀作品，同儕互相點讚給星與留言觀摩。</p>
+                            </div>
+                            <div class="bg-white/80 p-3.5 rounded-xl border border-cyan-100 shadow-xs">
+                                <p class="font-bold text-cyan-800">📌 零門檻免註冊代碼加入</p>
+                                <p class="text-slate-600 mt-1">老師設定課堂代碼，學生輸入代碼即可直接載入任務作答，操作簡單不卡關。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-cyan-200 text-xs text-cyan-700">
+                        💡 提示：所有任務與學生作答紀錄均完整儲存在老師的 Google 試算表中。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 類別 3: 思維心智圖工具 ================= -->
+        <section id="category-mindmap" class="category-section p-6 md:p-10">
+            <div class="flex items-center justify-between flex-wrap gap-4 mb-8 border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="cat-badge bg-emerald-100 text-emerald-700">
+                        <i class="fa-solid fa-brain"></i> 第三類別
+                    </span>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-800">思維構思與心智圖工具</h2>
+                </div>
+                <span class="text-sm font-semibold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                    <i class="fa-solid fa-sitemap mr-1"></i> Markdown 匯入匯出 ＆ 簡報模式
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 剛好系列-心智圖工具 -->
+                <div class="tool-card bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col h-full relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -mr-8 -mt-8 z-0 transition group-hover:scale-110"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl shadow-sm">
+                                <i class="fa-solid fa-diagram-project"></i>
+                            </div>
+                            <span class="text-xs bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-bold">GAS 雲端儲存</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">剛好系列 - 心智圖工具</h3>
+                        <div class="h-1 w-12 bg-emerald-500 rounded-full mb-4"></div>
+                        <p class="text-slate-600 font-bold mb-3">
+                            結構化思考、課堂概念梳理、支援多媒體節點的心智圖編輯工具。
+                        </p>
+                        <ul class="feature-list flex-grow">
+                            <li><i class="fa-solid fa-check text-emerald-600"></i> <strong>直覺編輯：</strong>支援快捷鍵、子節點/同級節點快速新增、拖曳重排。</li>
+                            <li><i class="fa-solid fa-check text-emerald-600"></i> <strong>多媒體節點：</strong>節點可嵌入超連結、圖片與詳細筆記。</li>
+                            <li><i class="fa-solid fa-check text-emerald-600"></i> <strong>靈活匯出：</strong>支援 Markdown 雙向匯入匯出、SVG/PNG 圖檔匯出。</li>
+                            <li><i class="fa-solid fa-check text-emerald-600"></i> <strong>簡報模式：</strong>一鍵進入全螢幕節點逐層聚光燈展示，教學超方便。</li>
+                        </ul>
+                        <div class="pt-2">
+                            <a href="https://kentxchang.blogspot.com/2026/07/gas.html" target="_blank" class="block w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-center transition shadow-md hover:shadow-lg transform active:scale-95">
+                                <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> 前往心智圖工具 (詳細說明與連結)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 心智圖特色導覽 -->
+                <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl p-6 border border-emerald-100 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-xl font-bold text-emerald-900 mb-3 flex items-center">
+                            <i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> 教師課堂應用推薦情境
+                        </h4>
+                        <div class="space-y-3 text-slate-700 text-sm leading-relaxed">
+                            <div class="bg-white/80 p-3.5 rounded-xl border border-emerald-100 shadow-xs">
+                                <p class="font-bold text-emerald-800">📌 課前概念架構梳理</p>
+                                <p class="text-slate-600 mt-1">使用 Markdown 大綱快速轉入心智圖，在上課開頭 3 分鐘為學生建立單元學習架構地圖。</p>
+                            </div>
+                            <div class="bg-white/80 p-3.5 rounded-xl border border-emerald-100 shadow-xs">
+                                <p class="font-bold text-emerald-800">📌 小組合作歸納討論</p>
+                                <p class="text-slate-600 mt-1">學生利用心智圖整理閱讀文本重點、專題探究子題目，並隨時插入相關參考網址與圖片。</p>
+                            </div>
+                            <div class="bg-white/80 p-3.5 rounded-xl border border-emerald-100 shadow-xs">
+                                <p class="font-bold text-emerald-800">📌 課堂全螢幕聚光燈發表</p>
+                                <p class="text-slate-600 mt-1">切換「簡報模式」，節點順序展開，引導全班聚焦講述關鍵思維。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-emerald-200 text-xs text-emerald-700">
+                        💡 提示：支援 GAS 雲端儲存，學生能隨時存取個人專屬心智圖作品。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 類別 4: 班級經營與親師互動 ================= -->
+        <section id="category-management" class="category-section p-6 md:p-10">
+            <div class="flex items-center justify-between flex-wrap gap-4 mb-8 border-b border-slate-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="cat-badge bg-indigo-100 text-indigo-700">
+                        <i class="fa-solid fa-people-roof"></i> 第四類別
+                    </span>
+                    <h2 class="text-2xl md:text-3xl font-black text-slate-800">班級經營與親師互動</h2>
+                </div>
+                <span class="text-sm font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full border border-indigo-200">
+                    <i class="fa-solid fa-table-cells mr-1"></i> Google 試算表綁定 ＆ 零外部金鑰
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 1. 教師課堂管理整合工具 V5 -->
+                <div class="tool-card bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col h-full relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -mr-8 -mt-8 z-0 transition group-hover:scale-110"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-3xl shadow-sm">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <span class="text-xs bg-indigo-100 text-indigo-800 px-2.5 py-1 rounded-full font-bold">班級管理旗艦版</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">教師課堂管理整合工具 V5</h3>
+                        <div class="h-1 w-12 bg-indigo-500 rounded-full mb-4"></div>
+                        <p class="text-slate-600 font-bold mb-3">
+                            日曆式課堂中樞：整合座位表、加扣分獎勵、作業檢核與電子聯絡簿。
+                        </p>
+                        <ul class="feature-list flex-grow">
+                            <li><i class="fa-solid fa-check text-indigo-600"></i> <strong>互動座位表：</strong>直覺排座位，支援個人與小組一鍵加扣分與正向回饋。</li>
+                            <li><i class="fa-solid fa-check text-indigo-600"></i> <strong>每日作業檢核：</strong>五色燈號快速追蹤（未交、已交、待訂正、已訂正）。</li>
+                            <li><i class="fa-solid fa-check text-indigo-600"></i> <strong>大螢幕聯絡簿：</strong>一鍵投影全屏聯絡簿供學生抄寫，並支援 PDF 匯出列印。</li>
+                            <li><i class="fa-solid fa-check text-indigo-600"></i> <strong>自訂日曆排程：</strong>整合行事曆、課堂筆記與班級日常管理。</li>
+                        </ul>
+                        <div class="pt-2">
+                            <a href="https://kentxchang.blogspot.com/2026/07/v5gashtml.html" target="_blank" class="block w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-center transition shadow-md hover:shadow-lg transform active:scale-95">
+                                <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> 前往課堂管理工具 V5 (詳細說明與連結)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. GAS&html 班級親師網頁系統 -->
+                <div class="tool-card bg-white rounded-3xl p-6 border border-slate-100 shadow-md flex flex-col h-full relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full -mr-8 -mt-8 z-0 transition group-hover:scale-110"></div>
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl shadow-sm">
+                                <i class="fa-solid fa-house-chimney-user"></i>
+                            </div>
+                            <span class="text-xs bg-purple-100 text-purple-800 px-2.5 py-1 rounded-full font-bold">親師橋樑 + QR Code</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">班級親師網頁系統 (+QRCode)</h3>
+                        <div class="h-1 w-12 bg-purple-500 rounded-full mb-4"></div>
+                        <p class="text-slate-600 font-bold mb-3">
+                            存放在老師自己 Google 試算表的親師交流網頁，免建資料庫安全透明。
+                        </p>
+                        <ul class="feature-list flex-grow">
+                            <li><i class="fa-solid fa-check text-purple-600"></i> <strong>親師通訊整合：</strong>每日聯絡簿、班級公告、榮譽榜與親師私訊互動。</li>
+                            <li><i class="fa-solid fa-check text-purple-600"></i> <strong>線上電子回條：</strong>支援家長手機簽署回傳、照片上傳與繳交狀態統計。</li>
+                            <li><i class="fa-solid fa-check text-purple-600"></i> <strong>學生成績與表現：</strong>小考成績查詢、課堂集點點數與個別回饋。</li>
+                            <li><i class="fa-solid fa-check text-purple-600"></i> <strong>一鍵 QR Code 分享：</strong>家長掃碼免登入 Google 即可查看班級日常。</li>
+                        </ul>
+                        <div class="pt-2">
+                            <a href="https://kentxchang.blogspot.com/2026/07/line.html" target="_blank" class="block w-full py-3.5 px-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl text-center transition shadow-md hover:shadow-lg transform active:scale-95">
+                                <i class="fa-solid fa-arrow-up-right-from-square mr-2"></i> 前往班級親師網頁系統 (詳細說明與連結)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-10 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-slate-700 font-medium mb-3">Made with <i class="fa-solid fa-heart text-red-500 mx-1"></i> by <span class="font-bold text-indigo-600">阿剛老師</span></p>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                本作品採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh_TW" target="_blank" class="hover:text-indigo-500 underline font-medium">CC BY-NC-SA 4.0 創用CC 姓名標示-非商業性-相同方式分享 授權條款</a><br>
+                歡迎非商業用途教育推廣、轉載、引用或改編，請保留「阿剛老師」署名。
+            </p>
+        </div>
+    </footer>
+
+    <!-- Firebase Setup Modal (Teaching Content) -->
+    <div id="setup-modal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto relative">
+             <div class="max-w-4xl mx-auto p-6">
+                <header class="text-center mb-6 pt-4">
+                    <button id="close-setup-modal-btn" class="absolute top-3 right-3 text-slate-400 hover:text-slate-700 text-4xl font-bold leading-none">&times;</button>
+                    <h2 class="text-3xl font-bold text-slate-800 mb-2">🔥 Firebase 通用專案設定教學</h2>
+                    <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 font-bold text-sm shadow-sm hover:bg-slate-50 transition mb-3">
+                        前往 Firebase 控制台 <i class="fa-solid fa-arrow-up-right-from-square ml-2 text-slate-500"></i>
+                    </a>
+                    <p class="text-lg text-slate-600">你需要建立 <strong>兩個</strong> 專案：一個給通用工具，一個給「剛好測」</p>
+                </header>
+
+                <h3 class="text-2xl font-bold text-indigo-700 mb-4 border-b pb-2 border-indigo-200">
+                    第一部分：通用專案設定 (剛好學, 白板, 簡報)
+                </h3>
+
+                <!-- Step 1-3 are identical -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+                    <div class="flex items-start gap-4">
+                        <div class="step-number">1-3</div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-3">建立專案、開啟匿名登入、建立資料庫</h4>
+                            <p class="text-slate-600 mb-2">
+                                請依照 <strong>「建立專案」、「開啟匿名登入 (Authentication)」</strong> 和 <strong>「建立資料庫 (Firestore)」</strong> 的步驟操作。
+                            </p>
+                            <div class="mt-4 p-3 bg-gray-50 rounded-lg border text-sm text-gray-700">
+                                <span class="font-bold">專案名稱建議：</span> <code>Universal-Tools</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 for Universal Project -->
+                <div class="bg-white rounded-2xl shadow-sm border-2 border-indigo-200 p-6 mb-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs px-2 py-1 rounded-bl-lg">通用專案規則</div>
+                    <div class="flex items-start gap-4">
+                        <div class="step-number bg-indigo-500">4</div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-3 text-indigo-700">設定 100 年有效期的安全性規則 (通用工具)</h4>
+                            <p class="text-slate-600 mb-4">
+                                這是給 <strong>剛好學、剛好白板、剛好簡報</strong> 專用的規則，可讓資料在 2125 年前都能讀寫，無需每年更改。
+                            </p>
+                            <div class="code-block">
+                                <button class="copy-btn" onclick="copyRules(this, 'universal')">複製通用代碼</button>
+                                <pre id="rules-code-universal"><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 匹配資料庫中的任何文件路徑
+    match /{document=**} {
+      // 允許讀取和寫入，條件是：當前時間小於 2125 年 1 月 1 日
+      allow read, write: if request.time &lt; timestamp.date(2125, 1, 1);
+    }
+  }
+}</code></pre>
+                            </div>
+                            <div class="mt-4 text-right">
+                                <p class="text-slate-500 text-sm mb-2">貼上後，請點擊：</p>
+                                <button class="bg-indigo-600 text-white px-4 py-1 rounded shadow cursor-default">發布 (Publish)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-red-700 mb-4 border-b pb-2 border-red-200 mt-10">
+                    第二部分：剛好測專案設定 (必需單獨申請)
+                </h3>
+
+                <div class="bg-red-50 rounded-2xl shadow-sm border-2 border-red-200 p-6 mb-6">
+                    <div class="flex items-start gap-4">
+                        <div class="step-number bg-red-600">A</div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-3 text-red-700">建立第二個專案（剛好測）</h4>
+                            <p class="text-slate-600 mb-2">
+                                <i class="fas fa-exclamation-triangle text-red-500 mr-1"></i> <strong>重要：</strong> 由於剛好測的資料（題庫、成績）需永久保存，我們必須將它與其他工具分開。
+                            </p>
+                            <p class="text-slate-600 mb-2 font-bold">
+                                請重複步驟 1-3：<strong>「建立專案」、「開啟匿名登入」</strong> 和 <strong>「建立資料庫」</strong>。
+                            </p>
+                            <div class="mt-4 p-3 bg-gray-50 rounded-lg border text-sm text-gray-700">
+                                <span class="font-bold">專案名稱建議：</span> <code>Quiz-Database</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step B for Quiz Project -->
+                <div class="bg-white rounded-2xl shadow-sm border-2 border-red-200 p-6 mb-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-bl-lg">剛好測專用規則</div>
+                    <div class="flex items-start gap-4">
+                        <div class="step-number bg-red-500">B</div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-3 text-red-700">設定剛好測的安全性規則</h4>
+                            <p class="text-slate-600 mb-4">
+                                這是專為 <strong>剛好測</strong> 的資料結構設計的規則，確保老師可管理題庫、學生可匿名作答與讀取成績。
+                            </p>
+                            <div class="code-block">
+                                <button class="copy-btn" onclick="copyRules(this, 'quiz')">複製剛好測代碼</button>
+                                <pre id="rules-code-quiz"><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 匹配資料庫中的任何文件路徑
+    match /{document=**} {
+      // 允許讀取和寫入，條件是：當前時間小於 2125 年 1 月 1 日
+      // (所有資料都設為 100 年效期，無需擔心過期)
+      allow read, write: if request.time &lt; timestamp.date(2125, 1, 1);
+    }
+  }
+}</code></pre>
+                            </div>
+                            <p class="mt-2 text-sm text-slate-500">
+                                <strong>提示：</strong> 雖然剛好測有特殊的資料結構，但由於我們讓所有使用者都能讀寫，所以可以直接沿用與通用專案相同的 100 年通用規則，<strong>設定方式完全相同</strong>。請同樣貼上 <strong>步驟 4</strong> 的代碼即可。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-2xl font-bold text-green-700 mb-4 border-b pb-2 border-green-200 mt-10">
+                    第三部分：取得設定碼與應用
+                </h3>
+
+                <!-- Step 5: New In-App Setup Method -->
+                <div class="bg-white rounded-2xl shadow-sm border-2 border-green-400 p-6 mb-6">
+                    <div class="flex items-start gap-4">
+                        <div class="step-number bg-green-500">5 (新)</div>
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold mb-3 text-green-700">在主程式中設定 Firebase (推薦新方法！)</h4>
+                            <p class="text-slate-600 mb-4 font-bold">
+                                全新功能：現在您可以直接在主程式中完成 Firebase 設定，無需下載或編輯檔案！
+                            </p>
+
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <span class="text-lg font-bold text-green-600 mr-3 mt-1 flex-shrink-0">1.</span>
+                                    <div>
+                                        <p class="font-bold text-slate-800">開啟主程式並點擊按鈕</p>
+                                        <p class="text-slate-600">在瀏覽器中開啟「剛好系列主程式」，點擊首頁右上角找到 <strong>「Firebase 設定」</strong> 按鈕並點擊。</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-lg font-bold text-green-600 mr-3 mt-1 flex-shrink-0">2.</span>
+                                    <div>
+                                        <p class="font-bold text-slate-800">貼上 Firebase 設定值</p>
+                                        <p class="text-slate-600">將您從 Firebase 複製的六行 Config 內容（例如通用專案或剛好測專案的設定）貼到文字框中。</p>
+                                        <pre class="mt-2 text-xs text-gray-600 overflow-x-auto bg-gray-100 p-2 rounded">
+apiKey: "AIzaSy...",
+authDomain: "xxx.firebaseapp.com",
+...</pre>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <span class="text-lg font-bold text-green-600 mr-3 mt-1 flex-shrink-0">3.</span>
+                                    <div>
+                                        <p class="font-bold text-slate-800">套用設定</p>
+                                        <p class="text-slate-600">點擊 <strong>「套用設定」</strong> 按鈕。系統會自動解析並儲存您的 Firebase 設定，頁面會重新載入，設定會儲存在瀏覽器的 <code>localStorage</code> 中。</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start border-t border-dashed pt-3">
+                                    <span class="text-lg font-bold text-purple-600 mr-3 mt-1 flex-shrink-0"><i class="fas fa-link"></i></span>
+                                    <div>
+                                        <p class="font-bold text-purple-800">生成異機專用網址（選用但推薦）</p>
+                                        <p class="text-slate-600">重新點擊 <strong>「Firebase 設定」</strong> 按鈕，然後點擊 <strong>「生成異機專用網址(可免再設定firebase)」</strong> 按鈕。</p>
+                                        <ul class="list-disc list-inside text-sm text-slate-500 mt-2">
+                                            <li>系統會生成含有您 Firebase 設定的網址，方便分享給學生或列印使用。</li>
+                                            <li>其他裝置開啟後會自動載入您的 Firebase 設定。</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-3 bg-yellow-100 text-yellow-800 rounded-lg border border-yellow-300 text-sm">
+                                <span class="font-bold">注意事項：</span> 設定會儲存在瀏覽器的 <code>localStorage</code> 中。生成的短網址和 QR Code 包含您的 Firebase 設定資訊，請妥善保管。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="py-4 text-center">
+                    <button id="close-setup-modal-bottom-btn" class="px-8 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-slate-900 transition shadow-lg">
+                        關閉教學
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Image Modal -->
+    <div id="hero-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="relative w-full max-w-6xl">
+            <button id="close-hero-modal-btn" class="absolute -top-3 -right-3 md:top-3 md:right-3 w-11 h-11 rounded-full bg-white/95 text-slate-800 hover:bg-white shadow-lg flex items-center justify-center text-2xl font-bold leading-none" aria-label="關閉大圖">&times;</button>
+            <img id="hero-modal-image" src="hero-image.jpg" alt="剛好系列介紹大圖" class="w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl border border-white/20 bg-white/5">
+        </div>
+    </div>
+
+    <script>
+        // --- Modal Scripts ---
+        const setupModal = document.getElementById('setup-modal');
+        const openSetupModalBtn = document.getElementById('open-setup-modal-btn');
+        const closeSetupModalBtn = document.getElementById('close-setup-modal-btn');
+        const closeSetupModalBottomBtn = document.getElementById('close-setup-modal-bottom-btn');
+
+        const heroImage = document.getElementById('hero-image');
+        const heroModal = document.getElementById('hero-modal');
+        const closeHeroModalBtn = document.getElementById('close-hero-modal-btn');
+
+        function openModal() {
+            if (setupModal) setupModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            if (setupModal) setupModal.classList.add('hidden');
+        }
+
+        function openHeroModal() {
+            if (!heroModal) return;
+            heroModal.classList.remove('hidden');
+        }
+
+        function closeHeroModal() {
+            if (!heroModal) return;
+            heroModal.classList.add('hidden');
+        }
+
+        function copyRules(button, type) {
+            let rulesCode;
+            if (type === 'universal') {
+                rulesCode = document.getElementById('rules-code-universal').innerText;
+            } else if (type === 'quiz') {
+                rulesCode = document.getElementById('rules-code-quiz').innerText;
+            } else {
+                return;
+            }
+
+            const cleanedRules = rulesCode.split('\n').filter(line => !line.trim().startsWith('//') && line.trim() !== '').join('\n');
+
+            navigator.clipboard.writeText(cleanedRules).then(() => {
+                const originalText = button.innerText;
+                button.innerText = '已複製！';
+                button.style.backgroundColor = '#16a34a';
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.backgroundColor = '#3b82f6';
+                }, 2000);
+            });
+        }
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            if (openSetupModalBtn) openSetupModalBtn.addEventListener('click', openModal);
+            if (closeSetupModalBtn) closeSetupModalBtn.addEventListener('click', closeModal);
+            if (closeSetupModalBottomBtn) closeSetupModalBottomBtn.addEventListener('click', closeModal);
+
+            if (setupModal) {
+                setupModal.addEventListener('click', (e) => {
+                    if (e.target === setupModal) {
+                        closeModal();
+                    }
+                });
+            }
+
+            if (heroImage) {
+                heroImage.addEventListener('click', openHeroModal);
+                heroImage.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openHeroModal();
+                    }
+                });
+            }
+            if (closeHeroModalBtn) closeHeroModalBtn.addEventListener('click', closeHeroModal);
+            if (heroModal) {
+                heroModal.addEventListener('click', (e) => {
+                    if (e.target === heroModal) closeHeroModal();
+                });
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeHeroModal();
+                    closeModal();
+                }
+            });
+
+            window.copyRules = copyRules;
+
+            // Entrance Animations
+            anime({
+                targets: 'header',
+                opacity: [0, 1],
+                translateY: [-20, 0],
+                easing: 'easeOutExpo',
+                duration: 1000
+            });
+
+            anime({
+                targets: '.category-section',
+                opacity: [0, 1],
+                translateY: [40, 0],
+                delay: anime.stagger(150),
+                easing: 'easeOutExpo',
+                duration: 1100
+            });
+
+            anime({
+                targets: '.tool-card',
+                opacity: [0, 1],
+                translateY: [30, 0],
+                delay: anime.stagger(80),
+                easing: 'easeOutExpo',
+                duration: 1000
+            });
+        });
+    </script>
+</body>
+</html>
